@@ -73,30 +73,6 @@ LOCK TABLES `budget` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `category`
---
-
-DROP TABLE IF EXISTS `category`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `category` (
-  `CategoryID` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(255) NOT NULL,
-  `Type` enum('Income','Expense') NOT NULL,
-  PRIMARY KEY (`CategoryID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `category`
---
-
-LOCK TABLES `category` WRITE;
-/*!40000 ALTER TABLE `category` DISABLE KEYS */;
-/*!40000 ALTER TABLE `category` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `expense`
 --
 
@@ -114,8 +90,8 @@ CREATE TABLE `expense` (
   KEY `UserID` (`UserID`),
   KEY `CategoryID` (`CategoryID`),
   CONSTRAINT `expense_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`),
-  CONSTRAINT `expense_ibfk_2` FOREIGN KEY (`CategoryID`) REFERENCES `category` (`CategoryID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `expense_ibfk_2` FOREIGN KEY (`CategoryID`) REFERENCES `expensecategory` (`CategoryID`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -124,7 +100,32 @@ CREATE TABLE `expense` (
 
 LOCK TABLES `expense` WRITE;
 /*!40000 ALTER TABLE `expense` DISABLE KEYS */;
+INSERT INTO `expense` VALUES (1,3,500.00,'2023-11-18','This is first expense',2),(2,3,50000.00,'2023-11-06','This is second expense',5);
 /*!40000 ALTER TABLE `expense` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `expensecategory`
+--
+
+DROP TABLE IF EXISTS `expensecategory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `expensecategory` (
+  `CategoryID` int NOT NULL AUTO_INCREMENT,
+  `CategoryName` varchar(255) NOT NULL,
+  PRIMARY KEY (`CategoryID`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `expensecategory`
+--
+
+LOCK TABLES `expensecategory` WRITE;
+/*!40000 ALTER TABLE `expensecategory` DISABLE KEYS */;
+INSERT INTO `expensecategory` VALUES (1,'Food'),(2,'Rent'),(3,'Groceries'),(4,'Laundry'),(5,'Something else');
+/*!40000 ALTER TABLE `expensecategory` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -144,7 +145,7 @@ CREATE TABLE `goal` (
   PRIMARY KEY (`GoalID`),
   KEY `UserID` (`UserID`),
   CONSTRAINT `goal_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -153,6 +154,7 @@ CREATE TABLE `goal` (
 
 LOCK TABLES `goal` WRITE;
 /*!40000 ALTER TABLE `goal` DISABLE KEYS */;
+INSERT INTO `goal` VALUES (1,1,1000000.00,3000.00,'2023-12-31','I want to achieve this'),(2,3,50000.00,25000.00,'2023-11-17','This is my first goal'),(3,3,50000.00,25000.00,'2023-11-17','This is my first goal'),(4,3,50000.00,25000.00,'2023-11-17','This is my first goal'),(5,3,50000.00,25000.00,'2023-11-12','This is another goal'),(6,3,8526.00,400.00,'2023-11-18','This is another goal'),(7,3,85.00,5.00,'2023-11-18','goal'),(8,3,6.00,2.00,'2023-11-12','goal');
 /*!40000 ALTER TABLE `goal` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -172,7 +174,7 @@ CREATE TABLE `income` (
   PRIMARY KEY (`IncomeID`),
   KEY `UserID` (`UserID`),
   CONSTRAINT `income_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -181,6 +183,7 @@ CREATE TABLE `income` (
 
 LOCK TABLES `income` WRITE;
 /*!40000 ALTER TABLE `income` DISABLE KEYS */;
+INSERT INTO `income` VALUES (1,1,500.00,'2023-11-29','This is my first income'),(2,1,8000.00,'2023-11-21','This is my second income'),(3,1,600.00,'2023-11-11','This is my third income'),(4,3,500.00,'2023-11-07','This is my first income '),(5,3,666000.25,'2023-11-12','This is my second income'),(6,3,85000.00,'2023-11-10','This is my fourth income'),(7,3,500.00,'2023-12-02','This is a new income'),(8,3,500.00,'2023-11-07','This is another income'),(9,3,500.00,'2023-11-18','This is another income'),(10,3,120000.00,'2023-11-12','This is another income 2'),(11,3,86.00,'2023-11-09','income');
 /*!40000 ALTER TABLE `income` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -203,7 +206,7 @@ CREATE TABLE `investment` (
   KEY `TypeID` (`TypeID`),
   CONSTRAINT `investment_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`),
   CONSTRAINT `investment_ibfk_2` FOREIGN KEY (`TypeID`) REFERENCES `investmenttype` (`TypeID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -212,6 +215,7 @@ CREATE TABLE `investment` (
 
 LOCK TABLES `investment` WRITE;
 /*!40000 ALTER TABLE `investment` DISABLE KEYS */;
+INSERT INTO `investment` VALUES (1,3,500.00,'2023-11-13','This is a first investment ',3);
 /*!40000 ALTER TABLE `investment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -226,7 +230,7 @@ CREATE TABLE `investmenttype` (
   `TypeID` int NOT NULL AUTO_INCREMENT,
   `TypeName` varchar(255) NOT NULL,
   PRIMARY KEY (`TypeID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -235,7 +239,35 @@ CREATE TABLE `investmenttype` (
 
 LOCK TABLES `investmenttype` WRITE;
 /*!40000 ALTER TABLE `investmenttype` DISABLE KEYS */;
+INSERT INTO `investmenttype` VALUES (1,'Stocks'),(2,'Bonds'),(3,'Real Estate'),(4,'Mutual Funds'),(5,'Cryptocurrency'),(6,'Savings Account'),(7,'401(k)'),(8,'Gold'),(9,'Government Bonds'),(10,'ETFs');
 /*!40000 ALTER TABLE `investmenttype` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `loginlog`
+--
+
+DROP TABLE IF EXISTS `loginlog`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `loginlog` (
+  `LogID` int NOT NULL AUTO_INCREMENT,
+  `UserID` int DEFAULT NULL,
+  `LoginTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`LogID`),
+  KEY `UserID` (`UserID`),
+  CONSTRAINT `loginlog_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `loginlog`
+--
+
+LOCK TABLES `loginlog` WRITE;
+/*!40000 ALTER TABLE `loginlog` DISABLE KEYS */;
+INSERT INTO `loginlog` VALUES (1,3,'2023-11-30 00:43:19'),(2,3,'2023-11-30 01:15:19'),(3,3,'2023-11-30 01:41:57'),(4,3,'2023-11-30 01:42:01'),(5,3,'2023-11-30 01:42:53'),(6,3,'2023-11-30 01:59:16');
+/*!40000 ALTER TABLE `loginlog` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -307,9 +339,10 @@ CREATE TABLE `user` (
   `Name` varchar(255) NOT NULL,
   `Email` varchar(255) NOT NULL,
   `Password` varchar(255) NOT NULL,
+  `Date Of Birth` date NOT NULL,
   PRIMARY KEY (`UserID`),
   UNIQUE KEY `Email` (`Email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -318,6 +351,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (1,'amiri','amiri@amiri.com','123','1999-11-06'),(2,'aq','aq@aq.com','123','2023-11-10'),(3,'sidi','sidi@sidi.com','123','2023-11-11'),(6,'ol','ol@ol.com','123','2023-11-02'),(7,'kylie','kylie@kylie.com','562','2002-06-05');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -328,6 +362,44 @@ UNLOCK TABLES;
 --
 -- Dumping routines for database 'financialadvisordb'
 --
+/*!50003 DROP PROCEDURE IF EXISTS `InsertIncome` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertIncome`(IN p_user_id INT, IN p_amount DECIMAL(10, 2), IN p_date_occurred DATE, IN p_description VARCHAR(255))
+BEGIN
+    INSERT INTO Income (UserID, Amount, DateOccurred, Description) VALUES (p_user_id, p_amount, p_date_occurred, p_description);
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `InsertUser` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertUser`(IN p_name VARCHAR(255), IN p_email VARCHAR(255), IN p_password VARCHAR(255), IN p_dob DATE)
+BEGIN
+    INSERT INTO `User` (`Name`, `Email`, `Password`, `Date Of Birth`) VALUES (p_name, p_email, p_password, p_dob);
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -338,4 +410,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-11-22 10:00:37
+-- Dump completed on 2023-11-29 21:59:34
