@@ -35,22 +35,6 @@ db_cursor = db_connection.cursor()
 # Secret key for session management
 app.secret_key = 'secret_key'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #login works 
 # Route for user login
 @app.route('/login', methods=['GET', 'POST'])
@@ -86,7 +70,7 @@ def logout():
         flash('You have been logged out.')
         return redirect(url_for('login'))
   
-#  Registration works  
+#  Registration works Proc
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -106,17 +90,28 @@ def register():
             return redirect(url_for('register'))
 
     return render_template('register.html')
-
-
-
 # Basic route for the home page
 @app.route('/')
 @login_required
 def home():
-    db_cursor.execute("SELECT * FROM User")
+
+    # Fetch data from the "Transaction" table
+    db_cursor.execute("SELECT * FROM Transaction WHERE UserID = %s", (session['user_id'],))
     data = db_cursor.fetchall()
+
     return render_template('home.html', data=data)
 
+
+
+
+
+
+
+
+
+
+
+    
 
 
 
@@ -129,9 +124,8 @@ def income():
     db_cursor.execute("SELECT * FROM Income WHERE UserID = %s", (session['user_id'],))
     data = db_cursor.fetchall()
     return render_template('income.html', data=data)
-    
 
-#create income works
+#create income works PROC
 # Route for creating income
 @app.route('/create_income', methods=['GET', 'POST'])
 @login_required
@@ -150,33 +144,29 @@ def create_income():
 
     return render_template('income.html')
 
-
+#Update income WORKD PROC
 # Route for updating income
 @app.route('/update_income/<int:income_id>', methods=['GET', 'POST'])
 @login_required
 def update_income(income_id):
-    # Fetch the existing income record from the database based on income_id
-    # Replace the placeholders with your actual SQL query
-    db_cursor.execute("SELECT * FROM Income WHERE income_id = %s", (income_id,))
-    income = db_cursor.fetchone()
-
     if request.method == 'POST':
         # Extract form data and update the income record in the database
-        # Replace the placeholders with your actual form fields
         amount = request.form['amount']
         date_occurred = request.form['date_occurred']
         description = request.form['description']
 
         # Execute your SQL query to update the income record
-        # Replace the placeholders with your actual column names
-        db_cursor.execute("UPDATE Income SET amount = %s, date_occurred = %s, description = %s WHERE income_id = %s",
-                          (amount, date_occurred, description, income_id))
+        db_cursor.callproc('UpdateIncome', (amount, date_occurred, description, income_id))
         db_connection.commit()
 
         flash('Income updated successfully!')
-        return redirect(url_for('income'))
+        return redirect(url_for('income')) 
 
-    return render_template('update_income.html', income=income)
+    # Fetch the existing income record from the database based on income_id
+    db_cursor.execute("SELECT * FROM Income WHERE IncomeID = %s", (income_id,))
+    data = db_cursor.fetchone()
+
+    return render_template('income.html', data=data)
 
 # Route for deleting income
 @app.route('/delete_income/<int:income_id>', methods=['GET', 'POST'])
@@ -199,9 +189,11 @@ def delete_income(income_id):
 
 
 
+
+
+
+
 #GOAL
-
-
 # Basic route for the goal page
 @app.route('/goal', methods=['GET'])
 @login_required
@@ -217,13 +209,11 @@ def create_goal():
     if request.method == 'POST':
         # Extract form data and insert into the database
         target_amount = request.form['target_amount']
-        current_amount = request.form['current_amount']
         deadline = request.form['deadline']
         description = request.form['description']
 
-        # Execute your SQL query to insert the goal record
-        db_cursor.execute("INSERT INTO Goal (UserID, TargetAmount, CurrentAmount, Deadline, Description) VALUES (%s, %s, %s, %s, %s)",
-                          (session['user_id'], target_amount, current_amount, deadline, description))
+        # Execute your SQL query to insert the goal record with the current amount
+        db_cursor.callproc("CurrentAmount", (session['user_id'], target_amount, deadline, description))
         db_connection.commit()
 
         flash('Goal created successfully!')
@@ -231,20 +221,20 @@ def create_goal():
 
     return render_template('goal.html')
 
+
 # Route for updating goal
 @app.route('/update_goal/<int:goal_id>', methods=['GET', 'POST'])
 @login_required
 def update_goal(goal_id):
     if request.method == 'POST':
-        # Extract form data and update the database
+        # Extract form data
         target_amount = request.form['target_amount']
-        current_amount = request.form['current_amount']
         deadline = request.form['deadline']
         description = request.form['description']
 
         # Execute your SQL query to update the goal record
-        db_cursor.execute("UPDATE Goal SET TargetAmount=%s, CurrentAmount=%s, Deadline=%s, Description=%s WHERE GoalID=%s",
-                          (target_amount, current_amount, deadline, description, goal_id))
+        db_cursor.execute("UPDATE Goal SET TargetAmount=%s, Deadline=%s, Description=%s WHERE GoalID=%s",
+                          (target_amount, deadline, description, goal_id))
         db_connection.commit()
 
         flash('Goal updated successfully!')
@@ -254,7 +244,8 @@ def update_goal(goal_id):
     db_cursor.execute("SELECT * FROM Goal WHERE GoalID = %s", (goal_id,))
     goal_data = db_cursor.fetchone()
 
-    return render_template('update_goal.html', goal_data=goal_data)
+    return render_template('goal.html', goal_data=goal_data)
+
 
 # Route for deleting goal
 @app.route('/delete_goal/<int:goal_id>', methods=['GET', 'POST'])
@@ -276,8 +267,7 @@ def delete_goal(goal_id):
 
 
 
-#Account 
-
+#Account CRUD DONE
 # Basic route for the account page
 @app.route('/account')
 @login_required
@@ -292,11 +282,7 @@ def account():
 
     return render_template('account.html', user_data=user_data, login_log_data=login_log_data)
 
-
-
-
-
-
+#workd with PROC
 # Route for updating user account details
 @app.route('/update_user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
@@ -305,12 +291,11 @@ def update_user(user_id):
         # Extract form data and update the database
         name = request.form['name']
         email = request.form['email']
-        password = request.form['password']  # Note: Handle password securely, consider hashing
+        password = request.form['password']  
         date_of_birth = request.form['date_of_birth']
 
         # Execute your SQL query to update the user record
-        db_cursor.execute("UPDATE User SET Name=%s, Email=%s, Password=%s, `Date Of Birth`=%s WHERE UserID=%s",
-                          (name, email, password, date_of_birth, user_id))
+        db_cursor.callproc('UpdateUser', (name, email, password, date_of_birth, user_id))
         db_connection.commit()
 
         flash('User details updated successfully!')
@@ -320,31 +305,20 @@ def update_user(user_id):
     db_cursor.execute("SELECT * FROM User WHERE UserID = %s", (user_id,))
     user_data = db_cursor.fetchone()
 
-    return render_template('update_user.html', user_data=user_data)
+    return render_template('account.html', user_data=user_data)
 
+#WORKS WITH PROC
 # Route for deleting user account
 @app.route('/delete_user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def delete_user(user_id):
     if request.method == 'POST':
         # Execute your SQL query to delete the user record
-        db_cursor.execute("DELETE FROM User WHERE UserID = %s", (user_id,))
+        db_cursor.callproc('DeleteUserById', (user_id,))
         db_connection.commit()
 
         flash('User deleted successfully!')
-        return redirect(url_for('account'))
-
-    # Fetch the existing user data for displaying it on the template
-    db_cursor.execute("SELECT * FROM User WHERE UserID = %s", (user_id,))
-    user_data = db_cursor.fetchone()
-
-    # Render the template with user data
-    return render_template('account.html', user_data=user_data)
-
-
-
-
-
+        return redirect(url_for('register'))
 
 #Expenses
 
@@ -367,11 +341,11 @@ def create_expense():
         amount = request.form['amount']
         date_occurred = request.form['date_occurred']
         description = request.form['description']
-        expensecategory = request.form['expensecategory']
+        CategoryID = request.form['Categoryid']
 
         # Execute your SQL query to insert the goal record
         db_cursor.execute("INSERT INTO Expense (UserID, Amount, DateOccurred, Description, CategoryID) VALUES (%s, %s, %s, %s, %s)",
-                          (session['user_id'], amount, date_occurred, description, expensecategory))
+                          (session['user_id'], amount, date_occurred, description, CategoryID))
         db_connection.commit()
 
         flash('Expense created successfully!')
@@ -388,11 +362,11 @@ def update_expense(expense_id):
         amount = request.form['amount']
         date_occurred = request.form['date_occurred']
         description = request.form['description']
-        category_type = request.form['CategoryType']
+        category_id = request.form['Categoryid']
 
         # Execute your SQL query to update the expense record
-        db_cursor.execute("UPDATE Expense SET Amount=%s, DateOccurred=%s, Description=%s, CategoryType=%s WHERE ExpenseID=%s",
-                          (amount, date_occurred, description, category_type, expense_id))
+        db_cursor.execute("UPDATE Expense SET Amount=%s, DateOccurred=%s, Description=%s, CategoryID=%s WHERE ExpenseID=%s",
+                          (amount, date_occurred, description, category_id, expense_id))
         db_connection.commit()
 
         flash('Expense updated successfully!')
@@ -402,7 +376,7 @@ def update_expense(expense_id):
     db_cursor.execute("SELECT * FROM Expense WHERE ExpenseID = %s", (expense_id,))
     expense_data = db_cursor.fetchone()
 
-    return render_template('update_expense.html', expense_data=expense_data)
+    return render_template('expenses.html', expense_data=expense_data)
 
 
 # Route for deleting expense
@@ -425,10 +399,10 @@ def delete_expense(expense_id):
 
 
 
+
+
+
 # Investments
-
-
-
 # Basic route for the investment page
 @app.route('/investment')
 @login_required
@@ -450,11 +424,10 @@ def create_investment():
         TypeID = request.form['TypeID']
 
         # Execute your SQL query to insert the goal record
-        db_cursor.execute("INSERT INTO Investment (UserID, Amount, DateOccurred, Description, TypeID) VALUES (%s, %s, %s, %s, %s)",
-                          (session['user_id'], amount, date_occurred, description, TypeID))
+        db_cursor.callproc('InsertInvestment', (session['user_id'], amount, date_occurred, description, TypeID))
         db_connection.commit()
 
-        flash('Expense created successfully!')
+        flash('Investment created successfully!')
         return redirect(url_for('investment'))
 
     return render_template('investment.html')
@@ -477,7 +450,7 @@ def update_investment(investment_id):
         db_connection.commit()
 
         flash('Investment updated successfully!')
-        return redirect(url_for('investments'))
+        return redirect(url_for('investment'))
 
     # Fetch the existing investment data for pre-filling the form
     db_cursor.execute("SELECT * FROM Investment WHERE InvestmentID = %s", (investment_id,))
@@ -487,7 +460,7 @@ def update_investment(investment_id):
     db_cursor.execute("SELECT * FROM InvestmentType")
     investment_types = db_cursor.fetchall()
 
-    return render_template('update_investment.html', investment_data=investment_data, investment_types=investment_types)
+    return render_template('investment.html', investment_data=investment_data, investment_types=investment_types)
 
 
 # Route for deleting investment
@@ -500,19 +473,113 @@ def delete_investment(investment_id):
         db_connection.commit()
 
         flash('Investment deleted successfully!')
-        return redirect(url_for('investments'))
+        return redirect(url_for('investment'))
 
-    # Handle GET request (optional)
-    # You may choose to render a template or provide a response for GET requests
-    return render_template('investments.html')
-
-
+    
+    return render_template('investment.html')
 
 
 
 # Budget
 
+# Basic route for the income page
+@app.route('/budget', methods=['GET'])
+@login_required
+def budget():
+    db_cursor.execute("SELECT * FROM budget WHERE UserID = %s", (session['user_id'],))
+    data = db_cursor.fetchall()
+    return render_template('budget.html', data=data)
 
+# Route for creating budget
+@app.route('/create_budget', methods=['GET', 'POST'])
+@login_required
+def create_budget():
+    if request.method == 'POST':
+        # Extract form data and insert into the database
+        amount = request.form['amount']
+        start_date = request.form['startDate']
+        end_date = request.form['endDate']
+        
+        try:
+            # Execute your SQL query to insert the budget record
+            db_cursor.callproc('InsertBudget', (session['user_id'], amount, start_date, end_date))
+            db_connection.commit()
+
+            flash('Budget created successfully!')
+            return redirect(url_for('budget'))
+
+        except Exception as e:
+            # Handle any exceptions (e.g., database errors)
+            flash(f'Error creating budget: {str(e)}')
+            return redirect(url_for('budget'))
+
+    return render_template('budget.html')  # Assuming you have a template for creating a budget
+
+# Route for deleting budget
+@app.route('/delete_budget/<int:budget_id>', methods=['GET', 'POST'])
+@login_required
+def delete_budget(budget_id):
+    if request.method == 'POST':
+        # Execute your SQL query to delete the investment record
+        db_cursor.execute("DELETE FROM Budget WHERE BudgetID = %s", (budget_id,))
+        db_connection.commit()
+
+        flash('Budget deleted successfully!')
+        return redirect(url_for('budget'))
+
+    
+    return render_template('budget.html')
+
+
+
+
+
+# Route for updating investment
+@app.route('/update_budget/<int:budget_id>', methods=['GET', 'POST'])
+@login_required
+def update_budget(budget_id):
+    if request.method == 'POST':
+        # Extract form data and update the database
+        amount = request.form['amount']
+        startDate = request.form['startDate']
+        endDate = request.form['endDate']
+       
+
+        # Execute your SQL query to update the investment record
+        db_cursor.execute("UPDATE Budget SET Amount=%s, StartDate=%s, EndDate=%s WHERE BudgetID=%s",
+                          (amount, startDate, endDate,budget_id))
+        db_connection.commit()
+
+        flash('Budget updated successfully!')
+        return redirect(url_for('budget'))
+
+    # Fetch the existing investment data for pre-filling the form
+    db_cursor.execute("SELECT * FROM Budget WHERE BudgetID = %s", (budget_id,))
+    budget = db_cursor.fetchone()
+
+   
+    return render_template('budget.html', budget=budget)
+
+
+
+
+
+#report 
+# Basic route for the home page
+@app.route('/report')
+@login_required
+def report():
+        # Execute the GenerateReport stored procedure
+        db_cursor.callproc('GenerateReport', (session['user_id'],))
+        
+        # Commit the changes to the database
+        db_connection.commit()
+        
+        # Fetch data from the "Report" table
+        db_cursor.execute("SELECT * FROM Report WHERE UserID = %s", (session['user_id'],))
+        data = db_cursor.fetchall()
+        
+        return render_template('report.html', data=data)
 
 
 
