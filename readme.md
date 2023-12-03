@@ -19,7 +19,7 @@ Before running the application, make sure you have the following installed:
 
 ###### Install dependencies
 ```pip install -r requirements.txt```  # or install each package individually
-
+```Edit the config.json```
 
 #### Clone the repository:
 
@@ -35,5 +35,4 @@ Access the application by visiting http://127.0.0.1:5000 in your web browser.
 Use the provided login functionality to access the home page.
 Navigate through the application to manage your financial data.
 
-#### Customization
-Edit the config json
+
