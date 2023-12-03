@@ -35,7 +35,7 @@ db_cursor = db_connection.cursor()
 # Secret key for session management
 app.secret_key = 'secret_key'
 
-#login works 
+# login works 
 # Route for user login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -60,6 +60,7 @@ def login():
 
     return render_template('login.html')
 
+
 # Logout works
 # Route for user logout
 @app.route('/logout', methods=['GET', 'POST'])
@@ -69,7 +70,8 @@ def logout():
         session.clear()
         flash('You have been logged out.')
         return redirect(url_for('login'))
-  
+
+
 #  Registration works Proc
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -90,6 +92,8 @@ def register():
             return redirect(url_for('register'))
 
     return render_template('register.html')
+
+
 # Basic route for the home page
 @app.route('/')
 @login_required
@@ -102,21 +106,7 @@ def home():
     return render_template('home.html', data=data)
 
 
-
-
-
-
-
-
-
-
-
-    
-
-
-
-#INCOME
-
+# INCOME
 # Basic route for the income page
 @app.route('/income', methods=['GET'])
 @login_required
@@ -125,7 +115,8 @@ def income():
     data = db_cursor.fetchall()
     return render_template('income.html', data=data)
 
-#create income works PROC
+
+# Create income works PROC
 # Route for creating income
 @app.route('/create_income', methods=['GET', 'POST'])
 @login_required
@@ -144,7 +135,8 @@ def create_income():
 
     return render_template('income.html')
 
-#Update income WORKD PROC
+
+# Update income WORKD PROC
 # Route for updating income
 @app.route('/update_income/<int:income_id>', methods=['GET', 'POST'])
 @login_required
@@ -168,6 +160,7 @@ def update_income(income_id):
 
     return render_template('income.html', data=data)
 
+
 # Route for deleting income
 @app.route('/delete_income/<int:income_id>', methods=['GET', 'POST'])
 @login_required
@@ -185,14 +178,6 @@ def delete_income(income_id):
     # You may choose to render a template or provide a response for GET requests
     return render_template('income.html')
 
-
-
-
-
-
-
-
-
 #GOAL
 # Basic route for the goal page
 @app.route('/goal', methods=['GET'])
@@ -201,6 +186,7 @@ def goal():
     db_cursor.execute("SELECT * FROM Goal WHERE UserID = %s", (session['user_id'],))
     data = db_cursor.fetchall()
     return render_template('goal.html', data=data)
+
 
 # Route for creating goal
 @app.route('/create_goal', methods=['GET', 'POST'])
@@ -264,10 +250,7 @@ def delete_goal(goal_id):
     return render_template('goal.html')
 
 
-
-
-
-#Account CRUD DONE
+# Account CRUD
 # Basic route for the account page
 @app.route('/account')
 @login_required
@@ -282,7 +265,8 @@ def account():
 
     return render_template('account.html', user_data=user_data, login_log_data=login_log_data)
 
-#workd with PROC
+
+# Works with PROC
 # Route for updating user account details
 @app.route('/update_user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
@@ -307,7 +291,8 @@ def update_user(user_id):
 
     return render_template('account.html', user_data=user_data)
 
-#WORKS WITH PROC
+
+# WORKS WITH PROC
 # Route for deleting user account
 @app.route('/delete_user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
@@ -320,8 +305,8 @@ def delete_user(user_id):
         flash('User deleted successfully!')
         return redirect(url_for('register'))
 
-#Expenses
 
+# Expenses
 # Basic route for the expenses page
 @app.route('/expenses')
 @login_required
@@ -329,7 +314,6 @@ def expenses():
     db_cursor.execute("SELECT * FROM Expense WHERE UserID = %s", (session['user_id'],))
     data = db_cursor.fetchall()
     return render_template('expenses.html', data=data)
-
 
 
 # Route for creating goal
@@ -352,6 +336,7 @@ def create_expense():
         return redirect(url_for('expenses'))
 
     return render_template('expenses.html')
+
 
 # Route for updating expense
 @app.route('/update_expense/<int:expense_id>', methods=['GET', 'POST'])
@@ -394,12 +379,6 @@ def delete_expense(expense_id):
     # Handle GET request (optional)
     # You may choose to render a template or provide a response for GET requests
     return render_template('expenses.html')
-
-
-
-
-
-
 
 
 # Investments
@@ -479,9 +458,7 @@ def delete_investment(investment_id):
     return render_template('investment.html')
 
 
-
 # Budget
-
 # Basic route for the income page
 @app.route('/budget', methods=['GET'])
 @login_required
@@ -489,6 +466,7 @@ def budget():
     db_cursor.execute("SELECT * FROM budget WHERE UserID = %s", (session['user_id'],))
     data = db_cursor.fetchall()
     return render_template('budget.html', data=data)
+
 
 # Route for creating budget
 @app.route('/create_budget', methods=['GET', 'POST'])
@@ -515,6 +493,7 @@ def create_budget():
 
     return render_template('budget.html')  # Assuming you have a template for creating a budget
 
+
 # Route for deleting budget
 @app.route('/delete_budget/<int:budget_id>', methods=['GET', 'POST'])
 @login_required
@@ -529,9 +508,6 @@ def delete_budget(budget_id):
 
     
     return render_template('budget.html')
-
-
-
 
 
 # Route for updating investment
@@ -561,11 +537,7 @@ def update_budget(budget_id):
     return render_template('budget.html', budget=budget)
 
 
-
-
-
-#Report 
-
+# Report 
 # Basic route for the home page
 @app.route('/report')
 @login_required
