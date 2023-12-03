@@ -564,7 +564,8 @@ def update_budget(budget_id):
 
 
 
-#report 
+#Report 
+
 # Basic route for the home page
 @app.route('/report')
 @login_required
