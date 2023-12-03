@@ -11,14 +11,15 @@ Before running the application, make sure you have the following installed:
 #### Virutal env for python
 ```python -m venv dbms```
 
-###### Activate the virtual environment
+#### Activate the virtual environment
 ```source dbms/bin/activate```  # On macOS/Linux
 
-###### or
+##### or
 ```source\Scripts\activate```  # On Windows
 
 ###### Install dependencies
 ```pip install -r requirements.txt```  # or install each package individually
+
 ```Edit the config.json```
 
 #### Clone the repository:
