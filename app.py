@@ -1,4 +1,4 @@
-import mysql.connector
+import pymysql
 import json
 from functools import wraps
 from datetime import datetime
@@ -20,14 +20,15 @@ def login_required(f):
             flash('You need to login first.')
             return redirect(url_for('login'))
     return wrap
+
 # Create a connection to the database
-db_connection = mysql.connector.connect(
+db_connection = pymysql.connect(
     host=config_data['DB_HOST'],
     user=config_data['DB_USER'],
     password=config_data['DB_PASSWORD'],
-    database=config_data['DB_NAME']
+    database=config_data['DB_NAME'],
+    cursorclass=pymysql.cursors.DictCursor  # Optional: to return results as dictionaries
 )
-
 
 # Create a cursor to execute SQL queries
 db_cursor = db_connection.cursor()
@@ -47,12 +48,12 @@ def login():
 
         if user:
             # Insert into LoginLog table
-            db_cursor.execute("INSERT INTO LoginLog (UserID, LoginTime) VALUES (%s, %s)", (user[0], datetime.now()))
+            db_cursor.execute("INSERT INTO LoginLog (UserID, LoginTime) VALUES (%s, %s)", (user['UserID'], datetime.now()))
             db_connection.commit()
 
             session['logged_in'] = True
-            session['user_id'] = user[0]
-            session['user_name'] = user[1]
+            session['user_id'] = user['UserID']
+            session['user_name'] = user['Name']
             flash('Login successful!')
             return redirect(url_for('home'))
         else:
@@ -72,7 +73,7 @@ def logout():
         return redirect(url_for('login'))
 
 
-#  Registration works Proc
+# Registration works Proc
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -85,9 +86,9 @@ def register():
         try:
             db_cursor.callproc('InsertUser', (name, email, password, DOB))
             db_connection.commit()
-            flash('Registration successful! You can now log in.')
+            flash('Registration successful! You can now login.')
             return redirect(url_for('login'))
-        except mysql.connector.Error as err:
+        except pymysql.MySQLError as err:
             flash(f"Error: {err}")
             return redirect(url_for('register'))
 
@@ -136,7 +137,7 @@ def create_income():
     return render_template('income.html')
 
 
-# Update income WORKD PROC
+# Update income Works PROC
 # Route for updating income
 @app.route('/update_income/<int:income_id>', methods=['GET', 'POST'])
 @login_required

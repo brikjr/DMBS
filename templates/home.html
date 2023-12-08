@@ -5,7 +5,7 @@
 {% block content %}
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Financial advisory application</a>
+            <a class="navbar-brand" href="#">Personal Finance Tracker</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -71,12 +71,12 @@
             <tbody>
                 {% for Transaction in data %}
                     <tr>
-                        <td>{{ Transaction[0] }}</td>
-                        <td>{{ Transaction[1] }}</td>
-                        <td>{{ Transaction[2] }}</td>
-                        <td>{{ Transaction[3] }}</td>
-                        <td>{{ Transaction[4] }}</td>
-                        <td>{{ Transaction[5] }}</td>
+                        <td>{{ Transaction['TransactionID'] }}</td>
+                        <td>{{ Transaction['UserID'] }}</td>
+                        <td>{{ Transaction['Amount'] }}</td>
+                        <td>{{ Transaction['Type'] }}</td>
+                        <td>{{ Transaction['DateOccurred'] }}</td>
+                        <td>{{ Transaction['Description'] }}</td>
                      
 
                     </tr>

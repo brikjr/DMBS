@@ -7,7 +7,7 @@
 {% block content %}
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="./">Financial advisory application</a>
+      <a class="navbar-brand" href="./">Personal Finance Tracker</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
@@ -92,14 +92,14 @@
       <tbody>
         {% for goal in data %}
           <tr>
-            <td>{{ goal[0] }}</td>
-            <td>{{ goal[1] }}</td>
-            <td>{{ goal[2] }}</td>
-            <td>{{ goal[3] }}</td>
-            <td>{{ goal[4] }}</td>
-            <td>{{ goal[5] }}</td>
+            <td>{{ goal['GoalID'] }}</td>
+            <td>{{ goal['UserID'] }}</td>
+            <td>{{ goal['TargetAmount'] }}</td>
+            <td>{{ goal['CurrentAmount'] }}</td>
+            <td>{{ goal['Deadline'] }}</td>
+            <td>{{ goal['Description'] }}</td>
             <td>
-              <form action="{{ url_for('delete_goal', goal_id = goal[0]) }}" method="POST">
+              <form action="{{ url_for('delete_goal', goal_id = goal['GoalID']) }}" method="POST">
                 <button type="submit" class="btn btn-danger">Delete</button>
               </form>
             </td>
@@ -109,12 +109,12 @@
     </table>
 
     {% for goal in data %}
-      {% if goal[1] == session['user_id'] %}
+      {% if goal['UserID'] == session['user_id'] %}
         <h2>Update Goal</h2>
-        <form action="{{ url_for('update_goal', goal_id = goal[0]) }}" method="POST">
+        <form action="{{ url_for('update_goal', goal_id = goal['GoalID']) }}" method="POST">
           <div class="mb-3">
             <label for="target_amount" class="form-label">Traget Amount</label>
-            <input type="number" class="form-control" id="target_amount" name="target_amount" value="{{ goal[2] }}" required />
+            <input type="number" class="form-control" id="target_amount" name="target_amount" value="{{ goal['TargetAmount'] }}" required />
           </div>
 
           

@@ -7,7 +7,7 @@
 {% block content %}
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="./">Financial advisory application</a>
+      <a class="navbar-brand" href="./">Personal Finance Tracker</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
@@ -90,15 +90,15 @@
         </thead>
         <tbody>
           {% for income in data %}
-            {% if income[1] == session['user_id'] %}
+            {% if income['UserID'] == session['user_id'] %}
               <tr>
-                <td>{{ income[0] }}</td>
-                <td>{{ income[1] }}</td>
-                <td>{{ income[2] }}</td>
-                <td>{{ income[3] }}</td>
-                <td>{{ income[4] }}</td>
+                <td>{{ income['IncomeID'] }}</td>
+                <td>{{ income['UserID'] }}</td>
+                <td>{{ income['Amount'] }}</td>
+                <td>{{ income['DateOccurred'] }}</td>
+                <td>{{ income['Description'] }}</td>
                 <td>
-                  <form action="{{ url_for('delete_income', income_id = income[0]) }}" method="POST">
+                  <form action="{{ url_for('delete_income', income_id = income['IncomeID']) }}" method="POST">
                     <button type="submit" class="btn btn-danger">Delete</button>
                   </form>
                 </td>
@@ -110,23 +110,23 @@
     </div>
 
     {% for income in data %}
-      {% if income[1] == session['user_id'] %}
+      {% if income['UserID'] == session['user_id'] %}
         <!-- Form for updating income -->
         <h4>Update Income</h4>
-        <form action="{{ url_for('update_income', income_id = income[0]) }}" method="POST">
+        <form action="{{ url_for('update_income', income_id = income['IncomeID']) }}" method="POST">
           <div class="mb-3">
             <label for="amount" class="form-label">Amount</label>
-            <input type="text" class="form-control" id="amount" name="amount" value="{{ income[2] }}" required />
+            <input type="text" class="form-control" id="amount" name="amount" value="{{ income['Amount'] }}" required />
           </div>
 
           <div class="mb-3">
             <label for="date_occurred" class="form-label">Date Occurred</label>
-            <input type="date" class="form-control" id="date_occurred" name="date_occurred" value="{{ income[3] }}" required />
+            <input type="date" class="form-control" id="date_occurred" name="date_occurred" value="{{ income['DateOccurred'] }}" required />
           </div>
 
           <div class="mb-3">
             <label for="description" class="form-label">Description</label>
-            <textarea class="form-control" id="description" name="description" rows="3" required>{{ income[4] }}</textarea>
+            <textarea class="form-control" id="description" name="description" rows="3" required>{{ income['Description'] }}</textarea>
           </div>
 
           <button type="submit" class="btn btn-primary">Update Income</button>

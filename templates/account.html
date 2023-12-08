@@ -5,7 +5,7 @@
 {% block content %}
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="./">Financial advisory application</a>
+            <a class="navbar-brand" href="./">Personal Finance Tracker</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -72,13 +72,13 @@
                 <tbody>
                     {% for user in user_data %}
                         <tr>
-                            <td>{{ user[0] }}</td>
-                            <td>{{ user[1] }}</td>
-                            <td>{{ user[2] }}</td>
-                            <td>{{ user[3] }}</td>
-                            <td>{{ user[4] }}</td>
+                            <td>{{ user['UserID'] }}</td>
+                            <td>{{ user['Name'] }}</td>
+                            <td>{{ user['Email'] }}</td>
+                            <td>{{ user['Password'] }}</td>
+                            <td>{{ user['Date Of Birth'] }}</td>
                             <td>
-                                <form action="{{ url_for('delete_user', user_id=user[0]) }}" method="POST">
+                                <form action="{{ url_for('delete_user', user_id=user['UserID']) }}" method="POST">
                                     <button type="submit" class="btn btn-danger">Delete</button>
                                 </form>
                             </td>
@@ -98,8 +98,8 @@
                 <tbody>
                     {% for log in login_log_data %}
                         <tr>
-                            <td>{{ log[0] }}</td>
-                            <td>{{ log[2] }}</td>
+                            <td>{{ log['LogID'] }}</td>
+                            <td>{{ log['LoginTime'] }}</td>
                             
                         </tr>
                     {% endfor %}
