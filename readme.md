@@ -16,7 +16,6 @@ This is a web application for personal financial management using Flask and MySQ
 - Install Python: The application is built in Python, so the first step is to ensure that Python is installed on your system. You can download and install Python from the [official website](https://www.python.org/downloads/macos/) or via [Homebrew](https://brew.sh/). To check the version of your Python paste the following command in your terminal:
 
 	``` python --version ```
-
 	If not installed, use Homebrew by running ```brew install python```
 
 - Install Git (Optional): Git usually comes pre-installed on macOS. To Verify paste the following command in your terminal:
