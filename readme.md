@@ -19,29 +19,17 @@ This is a web application for personal financial management using Flask and MySQ
 
 	If not installed, use Homebrew by running ```brew install python```
 
-  
-
 - Install Git (Optional): Git usually comes pre-installed on macOS. To Verify paste the following command in your terminal:
 
 	``` git --version ```
 
-  
-
 	If you need to install or update it, use Homebrew:
-
-  
 
 	``` brew install git ```
 
-  
-
 - Install MySQL: This is the database management system used for the app. Use Homebrew to install MySQL with:
 
-  
-
 	``` brew install mysql ```
-
-  
 
 	Start MySQL with ``` brew services start mysql ```
 
@@ -68,33 +56,24 @@ This is a web application for personal financial management using Flask and MySQ
 
 A virtual environment in Python is a self-contained directory that contains a Python installation for a particular version of Python, plus a number of additional packages. This allows you to have an isolated environment on your system for different projects and their dependencies. To set up a virtual environment, navigate to your project directory in the terminal or command prompt and run:
 
-  
 
 	``` python -m venv venv_name ```
 
-  
-
 	Replace ```venv_name``` with your preferred name for the virtual environment.
-
-  
 
 - Activating the Virtual Environment: Before installing the project dependencies, you need to activate the virtual environment.
 
 	On macOS/Linux:
 
-  
 
 	``` source venv_name/bin/activate ```
 
   
-
 	On Windows:
 
-  
 
 	``` venv_name\Scripts\activate ```
 
-  
 
 ### 2. Installing Dependencies
 
@@ -102,11 +81,9 @@ A virtual environment in Python is a self-contained directory that contains a Py
 
 After activating the virtual environment, install these packages using pip (Python's package installer):
 
-  
 
 ``` pip install -r requirements.txt ```
 
-  
 
 ### 3. Configuring the Application
 
@@ -121,12 +98,9 @@ The ```config.json``` file contains configuration settings for your application.
   
 
 If you're setting up the project from a remote repository (like GitHub), you can clone it using:
-
-  
+ 
 
 ``` git clone https://github.com/yourusername/brikjr/DMBS ```
-
-  
 
 Replace ```yourusername``` with your Github username. Navigate to the project directory after cloning.
 
@@ -138,11 +112,9 @@ Replace ```yourusername``` with your Github username. Navigate to the project di
 
 With the dependencies installed and the configuration set, you can start the application by running the main script, ```app.py``` in Flask projects. In the terminal, execute:
 
-  
 
 ``` python app.py ```
 
-  
 
 ### 6. Accessing the App
 
