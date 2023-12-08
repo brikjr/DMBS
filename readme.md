@@ -118,7 +118,7 @@ If you're setting up the project from a remote repository (like GitHub), you can
 
   
 
-``` git clone https://github.com/yourusername/brikjr/DMBS ```
+``` git clone https://github.com/brikjr/personal_finance_tracker ```
 
   
 
