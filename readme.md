@@ -68,10 +68,11 @@ This is a web application for personal financial management using Flask and MySQ
 
 A virtual environment in Python is a self-contained directory that contains a Python installation for a particular version of Python, plus a number of additional packages. This allows you to have an isolated environment on your system for different projects and their dependencies. To set up a virtual environment, navigate to your project directory in the terminal or command prompt and run:
   
-	``` python -m venv venv_name ```
+	``` bash
+ 	python -m venv venv_name ```
  
 
-	Replace ``` venv_name ``` with your preferred name for the virtual environment.
+	Replace venv_name with your preferred name for the virtual environment.
   
 - Activating the Virtual Environment: Before installing the project dependencies, you need to activate the virtual environment.
 
