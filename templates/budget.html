@@ -90,7 +90,7 @@
         </thead>
         <tbody>
           {% for budget in data %}
-            {% if budget[1] == session['user_id'] %}
+            {% if budget['UserID'] == session['user_id'] %}
               <tr>
                 <td>{{ budget['Budget ID'] }}</td>
                 <td>{{ budget['User ID'] }}</td>
@@ -110,7 +110,7 @@
     </div>
 
     {% for budget in data %}
-      {% if budget[1] == session['user_id'] %}
+      {% if budget['UserID'] == session['user_id'] %}
        
         <h4>Update Budget</h4>
         <form action="{{ url_for('update_budget', budget_id = budget['BudgetID']) }}" method="POST">

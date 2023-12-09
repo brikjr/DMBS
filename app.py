@@ -460,7 +460,7 @@ def delete_investment(investment_id):
 
 
 # Budget
-# Basic route for the income page
+# Basic route for the budget page
 @app.route('/budget', methods=['GET'])
 @login_required
 def budget():
